@@ -1,175 +1,123 @@
-/* Base Styles */
 :root {
-    --primary-color: #2c3e50;
-    --secondary-color: #3498db;
-    --accent-color: #e74c3c;
-    --light-color: #ecf0f1;
-    --dark-color: #2c3e50;
-    --success-color: #2ecc71;
+  --x-color: #ff6b6b;
+  --o-color: #6c5ce7;
+  --bg-gradient: linear-gradient(135deg, #1e1e2f, #2a2a40);
+  --cell-size: 80px;
+  --gap-size: 10px;
 }
 
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
 }
 
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--light-color);
-    color: var(--dark-color);
-    line-height: 1.6;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    padding: 20px;
+body, html {
+  height: 100%;
+  width: 100%;
+  background: var(--bg-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .container {
-    width: 100%;
-    max-width: 500px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    padding: 30px;
-    text-align: center;
-}
-
-header {
-    margin-bottom: 30px;
+  text-align: center;
+  padding: 1rem;
+  color: #eee;
 }
 
 h1 {
-    color: var(--primary-color);
-    margin-bottom: 20px;
-    font-size: 2.5rem;
+  font-size: 2rem;
+  margin-bottom: 1rem;
 }
 
-/* Player Input Section */
-.player-input {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.input-group {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-label {
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: var(--primary-color);
-}
-
-input {
-    width: 100%;
-    padding: 10px;
-    border: 2px solid #ddd;
-    border-radius: 5px;
-    font-size: 1rem;
-    transition: border 0.3s;
-}
-
-input:focus {
-    outline: none;
-    border-color: var(--secondary-color);
-}
-
-/* Game Area */
-.game-area {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-}
-
-.game-area.hidden {
-    display: none;
-}
-
-/* Game Board */
-.gameboard {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-    gap: 10px;
-    width: 100%;
-    max-width: 300px;
-    aspect-ratio: 1/1;
-    margin: 0 auto;
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, var(--cell-size));
+  grid-template-rows: repeat(3, var(--cell-size));
+  gap: var(--gap-size);
+  justify-content: center;
+  margin: auto;
 }
 
 .cell {
-    background-color: white;
-    border: 2px solid var(--primary-color);
-    border-radius: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 3rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
+  width: var(--cell-size);
+  height: var(--cell-size);
+  background-color: #2d2d44;
+  border-radius: 12px;
+  box-shadow: inset 0 0 5px #000;
+  font-size: 2rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+  position: relative;
 }
 
-.cell:hover {
-    background-color: #f8f9fa;
+.cell:hover::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  border-radius: 14px;
+  z-index: -1;
+  background: linear-gradient(135deg, #8e44ad, #6c5ce7);
+  filter: blur(4px);
+  opacity: 0.8;
+  transition: all 0.3s ease-in-out;
 }
 
 .cell.x {
-    color: var(--secondary-color);
+  color: var(--x-color);
 }
 
 .cell.o {
-    color: var(--accent-color);
+  color: var(--o-color);
 }
 
-/* Status and Buttons */
-.status {
-    font-size: 1.2rem;
-    font-weight: bold;
-    min-height: 30px;
-    color: var(--primary-color);
+#message {
+  margin: 1.2rem 0 0.8rem;
+  font-size: 1.2rem;
+  color: #dcdcdc;
 }
 
-.winner {
-    color: var(--success-color);
-    font-size: 1.3rem;
+#restart {
+  padding: 10px 20px;
+  font-size: 1rem;
+  background-color: #444;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 
-.btn {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 10px 20px;
+#restart:hover {
+  background-color: #666;
+}
+
+@media screen and (max-width: 500px) {
+  :root {
+    --cell-size: 60px;
+    --gap-size: 8px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  #message {
     font-size: 1rem;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    text-transform: uppercase;
-    font-weight: bold;
-    letter-spacing: 1px;
-}
+  }
 
-.btn:hover {
-    background-color: var(--secondary-color);
+  #restart {
+    font-size: 0.9rem;
+  }
 }
-
-/* Responsive Design */
-@media (max-width: 500px) {
-    .container {
-        padding: 20px;
-    }
-    
-    h1 {
-        font-size: 2rem;
-    }
-    
-    .cell {
-        font-size: 2.5rem;
-    }
-}   
