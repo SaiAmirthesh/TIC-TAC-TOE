@@ -1,69 +1,148 @@
-const cells = document.querySelectorAll('[data-cell]');
-const message = document.getElementById('message');
-const restartBtn = document.getElementById('restart');
 
-const WINNING_COMBINATIONS = [
-  [0,1,2], [3,4,5], [6,7,8],
-  [0,3,6], [1,4,7], [2,5,8],
-  [0,4,8], [2,4,6]
-];
+//Gameboard
+const Gameboard = (()=>{
+    let gameboard = ["","","","","","","","",""];
 
-let xTurn;
+    const render = () =>{
+        var boardHTML="";
+        gameboard.forEach((square, index)=>{
+        boardHTML += `<div class="square" id=square-${index}">${square}</div>`;
+        });
+        document.getElementById("gameboard").innerHTML = boardHTML;
+        
+        const squares = document.querySelectorAll(".square");
+        squares.forEach((square)=>{
+            square.addEventListener("click", (event) =>{
+                Game.handleclick(event);
 
-function startGame() {
-  xTurn = true;
-  cells.forEach(cell => {
-    cell.classList.remove('x', 'o');
-    cell.textContent = '';
-    cell.addEventListener('click', handleClick, { once: true });
-  });
-  setMessage("Player X's Turn");
-}
+            });
+        });
+    };
 
-function handleClick(e) {
-  const cell = e.target;
-  const current = xTurn ? 'x' : 'o';
-  placeMark(cell, current);
+    const Update = (index,value) =>{
+        if(gameboard[index] === "" && !Game.isGameOver()){
+            gameboard[index] = value;
+            render();
+            return true;
+        }
+        return false;
+    };
 
-  if (checkWin(current)) {
-    endGame(false, current);
-  } else if (isDraw()) {
-    endGame(true);
-  } else {
-    xTurn = !xTurn;
-    setMessage(`Player ${xTurn ? 'X' : 'O'}'s Turn`);
-  }
-}
+    const getGameboard = () => [...gameboard];
 
-function placeMark(cell, mark) {
-  cell.classList.add(mark);
-  cell.textContent = mark.toUpperCase();
-}
+    const reset = () =>{
+        gameboard = ["","","","","","","","",""];
+        render();
+        Game.start();
+    };
 
-function checkWin(current) {
-  return WINNING_COMBINATIONS.some(combo => {
-    return combo.every(index => cells[index].classList.contains(current));
-  });
-}
+    return{
+        render,
+        Update,
+        getGameboard,
+        reset
+    };
+})();
 
-function isDraw() {
-  return [...cells].every(cell =>
-    cell.classList.contains('x') || cell.classList.contains('o')
-  );
-}
 
-function endGame(draw, winner = null) {
-  if (draw) {
-    setMessage("It's a Draw!");
-  } else {
-    setMessage(`Player ${winner.toUpperCase()} Wins!`);
-  }
-  cells.forEach(cell => cell.removeEventListener('click', handleClick));
-}
+//Player creater
+const createPlayer = (name,marker) =>{
+    return{
+        name: name || `player ${marker}`,
+        marker
+    };
+};
 
-function setMessage(msg) {
-  message.textContent = msg;
-}
+const Game = (() => {
+    let players = [];
+    let currentPlayerIndex;
+    let gameOver;
 
-restartBtn.addEventListener('click', startGame);
-startGame();
+    const start = () => {
+        players = [
+            createPlayer(document.getElementById("player1").value, "X"),
+            createPlayer(document.getElementById("player2").value, "O")
+        ];
+        currentPlayerIndex = 0;
+        gameOver = false;
+        Gameboard.render();
+        updateStatus();
+    };
+
+    const handleclick = (event) => {
+        if (isGameOver()) return;
+
+        const index = parseInt(event.target.id.split("-")[1]);
+        if (Gameboard.Update(index, players[currentPlayerIndex].marker)) {
+            if (checkWin(players[currentPlayerIndex].marker)) {
+                gameOver = true;
+                updateStatus(`${players[currentPlayerIndex].name} wins!`);
+                return;
+            }
+            if (checkDraw()) {
+                gameOver = true;
+                updateStatus("It's a draw!");
+                return;
+            }
+
+            currentPlayerIndex = currentPlayerIndex === 0 ? 1 : 0;
+            updateStatus();
+        }
+    };
+
+    const checkWin = (marker) => {
+        const winPatterns = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+            [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
+            [0, 4, 8], [2, 4, 6]             // diagonals
+        ];
+
+        const board = Gameboard.getGameboard();
+        return winPatterns.some(pattern => {
+            return pattern.every(index => board[index] === marker);
+        });
+    };
+
+    const checkDraw = () => {
+        return Gameboard.getGameboard().every(cell => cell !== "");
+    };
+
+    const updateStatus = (message) => {
+        // Use the correct element, e.g., "message"
+        const statusElement = document.getElementById("message");
+        if (message) {
+            statusElement.textContent = message;
+        } else {
+            statusElement.textContent = `${players[currentPlayerIndex].name}'s turn (${players[currentPlayerIndex].marker})`;
+        }
+    };
+
+    const isGameOver = () => gameOver;
+
+    return {
+        start,
+        handleclick,
+        isGameOver
+    };
+})();
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const startButton = document.getElementById("start");
+    startButton.addEventListener("click", () => {
+        Game.start();
+    });
+});
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const startButton = document.getElementById("start");
+    startButton.addEventListener("click", () => {
+        Game.start();
+    });
+
+    const restartButton = document.getElementById("restart");
+    restartButton.addEventListener("click", () => {
+        Gameboard.reset();
+    });
+});
