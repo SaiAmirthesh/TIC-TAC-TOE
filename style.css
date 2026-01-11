@@ -21,13 +21,25 @@ body, html {
     width: 100%;
     background: var(--bg-gradient);
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     color: #e0e0e0;
 }
 
+.players{
+    display: flex;
+    gap:30px;
+    justify-content: center;
+    color:  #eee;
+    font-weight: bold;
+}
+
 .container {
-    margin: 65px;
+    align-items: center;
+    justify-content: center;
+    margin: 80px auto;
+    width: 350px;
     background-color: #1e1e2f;
     border-radius: 15px;
     text-align: center;
@@ -35,8 +47,6 @@ body, html {
     box-shadow: 0 10px 30px var(--shadow-dark),
                 inset 0 0 10px var(--shadow-light);
     border: 1px solid rgba(108, 92, 231, 0.1);
-    max-width: 90%;
-    width: 350px;
 }
 
 h1 {
@@ -47,46 +57,6 @@ h1 {
     letter-spacing: 1px;
 }
 
-/* Updated Controls Section */
-#controls {
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column; /* Stack vertically */
-    align-items: center; /* Center horizontally */
-    padding: 15px;
-    margin: 20px auto;
-    background: rgba(30, 30, 47, 0.7);
-    box-shadow: 0 4px 15px var(--shadow-dark);
-    border: 1px solid rgba(108, 92, 231, 0.2);
-    width: 90%;
-    max-width: 300px;
-}
-
-.input-group {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    margin-bottom: 12px;
-}
-
-.input-group label {
-    margin-bottom: 6px;
-    font-size: 0.9rem;
-    color: #d0d0d0;
-    text-align: left;
-}
-
-#player1, #player2 {
-    width: 100%;
-    border-radius: 8px;
-    padding: 10px 12px;
-    background: #2d2d44;
-    border: 1px solid rgba(108, 92, 231, 0.3);
-    color: #e0e0e0;
-    outline: none;
-    transition: all 0.3s ease;
-    font-size: 0.95rem;
-}
 
 .button-group {
     display: flex;
@@ -97,7 +67,7 @@ h1 {
 }
 
 #start, #restart {
-    flex: 1; /* Make buttons equal width */
+    flex: 1; 
     max-width: 120px;
     padding: 10px;
     font-size: 0.95rem;
@@ -211,77 +181,4 @@ h1 {
     animation: pulse 1s infinite alternate;
     color: #fff;
     text-shadow: 0 0 10px var(--glow-color);
-}
-
-@keyframes pulse {
-    0% { transform: scale(1); }
-    100% { transform: scale(1.05); }
-}
-
-@media screen and (max-width: 500px) {
-    :root {
-        --cell-size: 70px;
-        --gap-size: 8px;
-    }
-    
-    .container {
-        padding: 1.5rem;
-        width: 300px;
-    }
-    
-    h1 {
-        font-size: 1.7rem;
-    }
-    
-    #message {
-        font-size: 1.1rem;
-    }
-    
-    #start, #restart {
-        padding: 7px 15px;
-        font-size: 0.9rem;
-    }
-    
-    .square {
-        font-size: 2.2rem;
-    }
-}
-
-@media screen and (max-width: 350px) {
-    :root {
-        --cell-size: 60px;
-    }
-    
-    .container {
-        padding: 1rem;
-        width: 280px;
-    }
-    
-    h1 {
-        font-size: 1.5rem;
-    }
-    
-    .square {
-        font-size: 2rem;
-    }
-}
-
-@media screen and (max-width: 500px) {
-    #controls {
-        padding: 12px;
-        width: 95%;
-    }
-    
-    .input-group {
-        margin-bottom: 10px;
-    }
-    
-    #player1, #player2 {
-        padding: 8px 10px;
-    }
-    
-    #start, #restart {
-        padding: 8px;
-        font-size: 0.9rem;
-    }
 }
